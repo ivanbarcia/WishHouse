@@ -30,6 +30,7 @@ def parse(soup):
             'title': item.find('h2', {'class': 'ui-search-item__title ui-search-item__group__element shops__items-group-details shops__item-title'}).text,
             'currency': item.find('span', {'class': 'price-tag-symbol'}).text,
             'price': item.find('span', {'class': 'price-tag-fraction'}).text.replace('.', '').strip(),
+            'location': item.find('span', {'class': 'ui-search-item__group__element ui-search-item__location shops__items-group-details'}).text,
             'links': item['href']  # shortener.tinyurl.short(item['href'])
         }
         productslist.append(product)
