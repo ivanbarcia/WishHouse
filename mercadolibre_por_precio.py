@@ -17,7 +17,8 @@ def get_data(url):
 
 
 def parse(soup):
-    results = soup.find_all('a', {'class': 'ui-search-result__content ui-search-link'})
+    # results = soup.find_all('a', {'class': 'ui-search-result__content ui-search-link'})
+    results = soup.find_all('div', {'class': 'andes-card andes-card--flat andes-card--default ui-search-result shops__cardStyles ui-search-result--res andes-card--padding-default andes-card--animated'})
 
     if len(results) == 0:
         return
@@ -31,7 +32,8 @@ def parse(soup):
             'currency': item.find('span', {'class': 'price-tag-symbol'}).text,
             'price': item.find('span', {'class': 'price-tag-fraction'}).text.replace('.', '').strip(),
             'location': item.find('span', {'class': 'ui-search-item__group__element ui-search-item__location shops__items-group-details'}).text,
-            'links': item['href']  # shortener.tinyurl.short(item['href'])
+            'image': item.find('img')['data-src'],
+            'links': item.find('a')['href']  # shortener.tinyurl.short(item['href'])
         }
         productslist.append(product)
     return productslist

@@ -4,6 +4,7 @@ import pandas as pd  # pip install pandas openpyxl
 # import plotly.express as px  # pip install plotly-express
 import os.path
 from mercadolibre_por_precio import run
+from IPython.display import Image, HTML
 
 FILENAME = "por_precio_output.csv"
 
@@ -54,6 +55,7 @@ if df is not None:
     #     options=df["location"].unique(),
     #     default=df["location"].unique()
     # )
+
     title = st.sidebar.text_input("Escriba palabra para buscar en los titutlos: ")
 
     if st.button("Refrescar datos"):
@@ -68,16 +70,17 @@ if df is not None:
     
     # Filter title
     df_selection = df_selection[df_selection['title'].str.contains('(?i)' + title)] # The (?i) in the regex pattern tells the re module to ignore case.
-
     df_selection.set_index('ID')
-    df_selection['price'] = df['price'].apply('{:,}'.format)
+    df_selection['price'] = df['currency'] + ' ' + df['price'].apply('{:,}'.format)
+    df_selection['image_html'] = df['image'].str.replace('(.*)', '<img src="\\1" style="max-height:124px;max-width: 200px;"></img>')
     df_selection['links'] = df.apply(convert, axis=1)
 
     filtered = df_selection.sort_values(by=['price'])
-    filtered = filtered[['ID', 'title', 'location', 'currency', 'price', 'links']].set_index('ID')
-    filtered.columns = ['Nombre', 'Ubicacion', 'Moneda', 'Precio', 'Link']
+    filtered = filtered[['ID', 'title', 'location', 'price', 'image_html', 'links']].set_index('ID')
+    filtered.columns = ['Nombre', 'Ubicacion', 'Precio', 'Foto', 'Link']
+
     # Display result
-    st.write('\r\n' + '** result:' + ' **')
+    # st.write('\r\n' + '** result:' + ' **')
     st.write(filtered.to_html(escape=False), unsafe_allow_html=True)
     st.write('\r\n')
     st.write('\r\n')
@@ -92,3 +95,4 @@ if df is not None:
                 """
 
     st.markdown(hide_st_style, unsafe_allow_html=True)
+
