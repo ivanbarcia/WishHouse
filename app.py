@@ -56,7 +56,9 @@ if df is not None:
     #     default=df["location"].unique()
     # )
 
-    title = st.sidebar.text_input("Escriba palabra para buscar en los titutlos: ")
+    location = st.sidebar.text_input("Escriba palabra para buscar sobre ubicacion: ")
+
+    title = st.sidebar.text_input("Escriba palabra para buscar sobre descripcion: ")
 
     if st.button("Refrescar datos"):
         data_load_state = st.text('Cargando datos...')
@@ -68,13 +70,19 @@ if df is not None:
     # Filter selections from Dataframe
     df_selection = df.query("price >= @price_1 & price <= @price_2")
     
+    # Filter location
+    df_selection = df_selection[df_selection['location'].str.contains('(?i)' + location)] # The (?i) in the regex pattern tells the re module to ignore case.
+
     # Filter title
     df_selection = df_selection[df_selection['title'].str.contains('(?i)' + title)] # The (?i) in the regex pattern tells the re module to ignore case.
+
+    # Format values
     df_selection.set_index('ID')
     df_selection['price'] = df['currency'] + ' ' + df['price'].apply('{:,}'.format)
     df_selection['image_html'] = df['image'].str.replace('(.*)', '<img src="\\1" style="max-height:124px;max-width: 200px;"></img>')
     df_selection['links'] = df.apply(convert, axis=1)
 
+    # Add column names
     filtered = df_selection.sort_values(by=['price'])
     filtered = filtered[['ID', 'title', 'location', 'price', 'image_html', 'links']].set_index('ID')
     filtered.columns = ['Nombre', 'Ubicacion', 'Precio', 'Foto', 'Link']
@@ -96,3 +104,5 @@ if df is not None:
 
     st.markdown(hide_st_style, unsafe_allow_html=True)
 
+
+### TODO: Favoritos?

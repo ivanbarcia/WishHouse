@@ -17,7 +17,7 @@ def get_data(url):
 
 
 def parse(soup):
-    results = soup.find_all('div', {'class': 'andes-card andes-card--flat andes-card--default ui-search-result shops__cardStyles ui-search-result--res andes-card--padding-default andes-card--animated'})
+    results = soup.find_all('div', {'class': 'container-card-prop ng-star-inserted'})
 
     if len(results) == 0:
         return
@@ -27,11 +27,11 @@ def parse(soup):
         index += 1
         product = {
             'ID': index,
-            'title': item.find('h2', {'class': 'ui-search-item__title shops__item-title'}).text,
-            'currency': item.find('span', {'class': 'price-tag-symbol'}).text,
-            'price': item.find('span', {'class': 'price-tag-fraction'}).text.replace('.', '').strip(),
-            'location': item.find('span', {'class': 'ui-search-item__group__element ui-search-item__location shops__items-group-details'}).text,
-            'image': item.find('img')['data-src'],
+            'title': item.find('h2', {'class': 'description ng-star-inserted'}).text,
+            'currency': '',
+            'price': item.find('p', {'id': 'price'}).text.replace('.', '').strip(),
+            'location': item.find('h2', {'class': 'description ng-star-inserted'}).text,
+            'image': item.find('img')['src'],
             'links': item.find('a')['href']  # shortener.tinyurl.short(item['href'])
         }
         productslist.append(product)
@@ -49,15 +49,15 @@ def output(productslist, searchterm):
 def run():
     result = []
 
-    url = f'https://inmuebles.mercadolibre.com.ar/casas/venta/_PriceRange_{lower_price}USD-{higher_price}USD'
+    url = f'https://www.remax.com.ar/listings/buy?page=0&pageSize=24&sort=-createdAt&in:operationId=1&in:typeId=9,10,11&pricein=1:{lower_price}:{higher_price}&filterCount=2&viewMode=list'
     soup = get_data(url)
     productslist = parse(soup)
 
     EOF = False
     i = 1
     while not EOF:
-        i = i + 48
-        url = f'https://inmuebles.mercadolibre.com.ar/casas/venta/_Desde_{i}_PriceRange_{lower_price}USD-{higher_price}USD'
+        i = i + 1
+        url = f'https://www.remax.com.ar/listings/buy?page=1&pageSize=24&sort=-createdAt&in:operationId=1&in:typeId=9,10,11&pricein=1:{lower_price}:{higher_price}&filterCount={i}&viewMode=list'
         soup = get_data(url)
         result = parse(soup)
 
