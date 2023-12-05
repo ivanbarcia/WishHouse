@@ -5,7 +5,7 @@ import pandas as pd
 
 productslist = []
 index = 0
-lower_price = '100000'
+lower_price = '10000'
 higher_price = '200000'
 # shortener = pyshorteners.Shortener()
 
@@ -17,7 +17,7 @@ def get_data(url):
 
 
 def parse(soup):
-    results = soup.find_all('div', {'class': 'andes-card andes-card--flat andes-card--default ui-search-result shops__cardStyles ui-search-result--res andes-card--padding-default andes-card--animated'})
+    results = soup.find_all('div', {'class': 'andes-card'})
 
     if len(results) == 0:
         return
@@ -27,10 +27,10 @@ def parse(soup):
         index += 1
         product = {
             'ID': index,
-            'title': item.find('h2', {'class': 'ui-search-item__title shops__item-title'}).text,
-            'currency': item.find('span', {'class': 'price-tag-symbol'}).text,
-            'price': item.find('span', {'class': 'price-tag-fraction'}).text.replace('.', '').strip(),
-            'location': item.find('span', {'class': 'ui-search-item__group__element ui-search-item__location shops__items-group-details'}).text,
+            'title': item.find('h2', {'class': 'ui-search-item__title'}).text,
+            'currency': item.find('span', {'class': 'andes-money-amount__currency-symbol'}).text,
+            'price': item.find('span', {'class': 'andes-money-amount__fraction'}).text.replace('.', '').strip(),
+            'location': item.find('span', {'class': 'ui-search-item__location-label'}).text,
             'image': item.find('img')['data-src'],
             'links': item.find('a')['href']  # shortener.tinyurl.short(item['href'])
         }
@@ -49,7 +49,7 @@ def output(productslist, searchterm):
 def run():
     result = []
 
-    url = f'https://inmuebles.mercadolibre.com.ar/casas/venta/_PriceRange_{lower_price}USD-{higher_price}USD'
+    url = f'https://inmuebles.mercadolibre.com.ar/venta/_PriceRange_{lower_price}USD-{higher_price}USD'
     soup = get_data(url)
     productslist = parse(soup)
 
