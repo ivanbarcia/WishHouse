@@ -48,7 +48,7 @@ if df is not None:
     st.sidebar.header("Filtros:")
     currencies = df['currency'].drop_duplicates()
     currency = st.sidebar.selectbox('Seleccione moneda: ', currencies)
-    price_1, price_2 = st.sidebar.slider("Seleccione rango de precios:", int(df["price"].min()), int(df["price"].max()), [int(df["price"].min()), int(df["price"].max())], step=50000)
+    price_1, price_2 = st.sidebar.slider("Seleccione rango de precios:", int(df["price"].min()), int(df["price"].max()), [int(df["price"].min()), int(df["price"].max())], step=10000)
     
     # location = st.sidebar.multiselect(
     #     "Seleccione Ubicacion:",
@@ -57,8 +57,8 @@ if df is not None:
     # )
 
     location = st.sidebar.text_input("Escriba palabra para buscar sobre ubicacion: ")
-
     title = st.sidebar.text_input("Escriba palabra para buscar sobre descripcion: ")
+    # TODO: Filtrar por ambientes
 
     if st.button("Refrescar datos"):
         data_load_state = st.text('Cargando datos...')
@@ -78,7 +78,7 @@ if df is not None:
 
     # Format values
     df_selection.set_index('ID')
-    df_selection['price'] = df['currency'] + ' ' + df['price'].apply('{:,}'.format)
+    #df_selection['price'] = df['currency'] + ' ' + df['price'].apply('{:,}'.format)
     df_selection['image_html'] = df['image'].str.replace('(.*)', '<img src="\\1" style="max-height:124px;max-width: 200px;"></img>')
     df_selection['links'] = df.apply(convert, axis=1)
 
