@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+import re
 # import pyshorteners
 
 productslist = []
@@ -25,12 +26,27 @@ def parse(soup):
     for item in results:
         global index
         index += 1
+
+        # Find all li elements with the class 'poly-attributes-listitem'
+        attributes = item.find_all('li', {'class': 'poly-attributes-list__bar'})
+        
+        # Look for the element containing 'm² cubiertos'
+        meters_text = ""
+        for attr in attributes:
+            if 'm² cubiertos' in attr.text:
+                meters_text = attr.text
+                break
+        
+        meters_num = re.findall(r'\d+\.?\d*', meters_text)
+
+        
         product = {
             'ID': index,
             'title': item.find('h2', {'class': 'poly-box poly-component__title'}).text,
             'currency': item.find('span', {'class': 'andes-money-amount__currency-symbol'}).text,
             'price': item.find('span', {'class': 'andes-money-amount__fraction'}).text.replace('.', '').strip(),
             'location': item.find('span', {'class': 'poly-component__location'}).text,
+            'meters': float(meters_num[0]) if meters_num else None,
             'image': item.find('img')['src'],
             'links': item.find('a')['href']  # shortener.tinyurl.short(item['href'])
         }
