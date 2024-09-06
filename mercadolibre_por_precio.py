@@ -27,11 +27,11 @@ def parse(soup):
         index += 1
         product = {
             'ID': index,
-            'title': item.find('h2', {'class': 'ui-search-item__title'}).text,
+            'title': item.find('h2', {'class': 'poly-box poly-component__title'}).text,
             'currency': item.find('span', {'class': 'andes-money-amount__currency-symbol'}).text,
             'price': item.find('span', {'class': 'andes-money-amount__fraction'}).text.replace('.', '').strip(),
-            'location': item.find('span', {'class': 'ui-search-item__location-label'}).text,
-            'image': item.find('img')['data-src'],
+            'location': item.find('span', {'class': 'poly-component__location'}).text,
+            'image': item.find('img')['src'],
             'links': item.find('a')['href']  # shortener.tinyurl.short(item['href'])
         }
         productslist.append(product)

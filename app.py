@@ -4,7 +4,7 @@ import pandas as pd  # pip install pandas openpyxl
 # import plotly.express as px  # pip install plotly-express
 import os.path
 from mercadolibre_por_precio import run
-from IPython.display import Image, HTML
+# from IPython.display import Image, HTML
 
 FILENAME = "por_precio_output.csv"
 
