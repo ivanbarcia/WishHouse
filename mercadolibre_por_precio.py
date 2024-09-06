@@ -73,7 +73,7 @@ def run():
     i = 1
     while not EOF:
         i = i + 48
-        url = f'https://inmuebles.mercadolibre.com.ar/casas/venta/_Desde_{i}_PriceRange_{lower_price}USD-{higher_price}USD'
+        url = f'https://inmuebles.mercadolibre.com.ar/venta/_Desde_{i}_PriceRange_{lower_price}USD-{higher_price}USD'
         soup = get_data(url)
         result = parse(soup)
 
