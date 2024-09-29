@@ -38,7 +38,7 @@ def parse(soup):
                 break
         
         meters_num = re.findall(r'\d+\.?\d*', meters_text)
-
+        image = item.find('img')
         
         product = {
             'ID': index,
@@ -47,7 +47,7 @@ def parse(soup):
             'price': item.find('span', {'class': 'andes-money-amount__fraction'}).text.replace('.', '').strip(),
             'location': item.find('span', {'class': 'poly-component__location'}).text,
             'meters': float(meters_num[0]) if meters_num else None,
-            'image': item.find('img')['src'],
+            'image': image.get('data-src', image.get('src')),
             'links': item.find('a')['href']  # shortener.tinyurl.short(item['href'])
         }
         productslist.append(product)
