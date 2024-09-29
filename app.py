@@ -1,4 +1,3 @@
-from json import load
 import streamlit as st  # pip install streamlit
 import pandas as pd  # pip install pandas openpyxl
 # import plotly.express as px  # pip install plotly-express
